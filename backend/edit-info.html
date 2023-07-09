@@ -5,63 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link href="../static/css/style.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/loading.css" rel="stylesheet" type="text/css">
     <script src="../static/js/config.js"></script>
     <script src="../static/js/localStorage.js"></script>
+    <script src="../static/js/file_handler.js"></script>
     <script src="../static/js/auth.js"></script>
     <script src="../static/js/navbar.js"></script>
     <script src="../static/js/profile.js"></script>
     <script src="../static/js/accounts.js"></script>
+    <script type="module" src="../static/js/edit-info.js"></script>
     <script src="../static/js/set-page-info.js"></script>
     <script src="../static/js/init.js"></script>
-    <script>
-      // http://jsfiddle.net/DerekL/3wRpA/
-      // https://stackoverflow.com/questions/53651409/writing-a-base64-string-to-file-in-python-not-working
-      // https://stackoverflow.com/questions/34116682/save-base64-image-python
-      /*The FileModal Class*/
-      function FileModal(accept) {
-        var callback = function(){};
-        return {
-          show: function() {
-            $("<input>").attr({
-                type: "file",
-                accept: accept
-              }).appendTo("body").hide().change(function(e){
-                var file = e.target.files[0],
-                reader = new FileReader();
-                reader.onload = function(progress){
-                callback(progress.target.result);
-              };
-              reader.readAsDataURL(file);
-            }).click();
-          },
-          set onload(c){ callback = c; }
-        }
-      }
-
-      function changeAvatarImg1() {
-        var file = new FileModal("image/png");
-        file.onload = function(d){
-          var resultBool = false;
-	        // Upload base64 image file
-	        resultBool = uploadAvatarImg(d);
-
-          if (resultBool == true) {
-            window.location.replace("/eid.html");
-          }
-        };
-        file.show();
-      }
+    <script type="module">
+      import { upload_avatar_image } from "../static/js/edit-info.js"
+      window.upload_avatar_image = upload_avatar_image;
     </script>
   </head>
 
   <body onload="init();">
+
+    <div id="loading">
+      <div id="loading-text">
+        <p>上傳中 ...</p>
+      </div>
+      <div id="loading-spinner">
+        <img src="/static/imgs/loading.png" alt="Loading">
+      </div>
+    </div>
+
     <div class="container-fluid border border-secondary border-width-lg min-vh-100">
       <div class="row">
         <div class="col">
@@ -108,7 +86,7 @@
                 </div>
                 <div class="col-5">
                   <div class="card">
-	                  <button id="btn_avatar_img" onclick="changeAvatarImg1()"><div id="avatar_img" class="bg-contain" style="background-image: url(../static/imgs/pages/user.png); height: 170px; background-repeat: no-repeat" ></div></button>
+	                  <button id="btn_avatar_img" onclick="upload_avatar_image()"><div id="avatar_img" class="bg-contain" style="background-image: url(../static/imgs/pages/user.png); height: 170px; background-repeat: no-repeat" ></div></button>
                   </div>
                 </div>
               </div>
