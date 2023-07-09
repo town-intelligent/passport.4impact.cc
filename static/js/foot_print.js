@@ -1,3 +1,33 @@
+async function submitTaskTickets(task_UUID) {
+  return new Promise(async (resolve, reject) => {
+    if (getLocalStorage(task_UUID)=== "") {
+      return;
+    }
+
+    obj = JSON.parse(getLocalStorage(task_UUID));
+    var dataJSON = {"uuid": task_UUID,"sdgs-1":obj.ticket.s1,"sdgs-2":obj.ticket.s2,
+      "sdgs-3":obj.ticket.s3,"sdgs-4":obj.ticket.s4,"sdgs-5":obj.ticket.s5,
+      "sdgs-6":obj.ticket.s6,"sdgs-7":obj.ticket.s7,"sdgs-8":obj.ticket.s8,
+      "sdgs-9":obj.ticket.s9,"sdgs-10":obj.ticket.s10,"sdgs-11":obj.ticket.s11,
+      "sdgs-12":obj.ticket.s12,"sdgs-13":obj.ticket.s13,"sdgs-14":obj.ticket.s14,
+      "sdgs-15":obj.ticket.s15,"sdgs-16":obj.ticket.s16,"sdgs-17":obj.ticket.s17,
+      "sdgs-18":obj.ticket.s18,"sdgs-19":obj.ticket.s19,"sdgs-20":obj.ticket.s20,
+      "sdgs-21":obj.ticket.s21,"sdgs-22":obj.ticket.s22,"sdgs-23":obj.ticket.s23,
+      "sdgs-24":obj.ticket.s24,"sdgs-25":obj.ticket.s25,"sdgs-26":obj.ticket.s26,
+      "sdgs-27":obj.ticket.s27};
+
+    var taskWeight = {};
+    try {
+      taskWeight = tasks_submit(dataJSON);
+      // Set project weight to LocalStorage
+      setLocalStorage("project_weight", taskWeight);
+    } catch(e) {console.log(e);}
+
+    resolve(taskWeight);
+  });
+}
+
+
 function addWeight(w1, w2) {
 
   const combined = [w1, w2].reduce((a, obj) => {
@@ -10,60 +40,35 @@ function addWeight(w1, w2) {
   return combined;
 }
 
-function submitTaskComment(task_UUID) {
-  // Get task UUID
-  var queryString = window.location.search;
-  var urlParams = new URLSearchParams(queryString);
-  var uuid = urlParams.get("uuid");
+function submitTaskComment() {
+  return new Promise(async (resolve, reject) => {
+    // Get task UUID
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var uuid = urlParams.get("uuid");
 
-  var dataJSON = {};
-  dataJSON.uuid = uuid;
-  dataJSON.email = getLocalStorage("email");
-  dataJSON.comment = document.getElementById("Idcomment").value;
-  
-  var img = document.getElementById("id_upload_foot_print_img").style.backgroundImage;
-  img = img.replace('url("', '');
-  img = img.replace('")', '');
+    var dataJSON = {};
+    dataJSON.uuid = uuid;
+    dataJSON.email = getLocalStorage("email");
+    dataJSON.comment = document.getElementById("Idcomment").value;
+    
+    var img = document.getElementById("id_upload_foot_print_img").style.backgroundImage;
+    img = img.replace('url("', '');
+    img = img.replace('")', '');
 
-  dataJSON.img = getLocalStorage("commentImg"); // img; // getLocalStorage("commentImg");
+    dataJSON.img = img;//getLocalStorage("commentImg"); // img; // getLocalStorage("commentImg");
 
-  var resultBool = false;
-  resultBool = comment_project(dataJSON);
+    var resultBool = false;
+    resultBool = comment_project(dataJSON);
 
-  if (resultBool == true) {
-    alert("上傳成功!");
-  } else {
-    alert("上傳失敗，請檢查您的圖檔是否正確！")
-  }
+/*     if (resultBool == true) {
+      alert("上傳成功!");
+    } else {
+      alert("上傳失敗，請檢查您的圖檔是否正確！")
+    } */
 
-  return;
-}
-
-function submitTaskTickets(task_UUID) {
-  if (getLocalStorage(task_UUID)=== "") {
-    return;
-  }
-
-  obj = JSON.parse(getLocalStorage(task_UUID));
-  var dataJSON = {"uuid": task_UUID,"sdgs-1":obj.ticket.s1,"sdgs-2":obj.ticket.s2,
-          "sdgs-3":obj.ticket.s3,"sdgs-4":obj.ticket.s4,"sdgs-5":obj.ticket.s5,
-          "sdgs-6":obj.ticket.s6,"sdgs-7":obj.ticket.s7,"sdgs-8":obj.ticket.s8,
-          "sdgs-9":obj.ticket.s9,"sdgs-10":obj.ticket.s10,"sdgs-11":obj.ticket.s11,
-          "sdgs-12":obj.ticket.s12,"sdgs-13":obj.ticket.s13,"sdgs-14":obj.ticket.s14,
-          "sdgs-15":obj.ticket.s15,"sdgs-16":obj.ticket.s16,"sdgs-17":obj.ticket.s17,
-          "sdgs-18":obj.ticket.s18,"sdgs-19":obj.ticket.s19,"sdgs-20":obj.ticket.s20,
-          "sdgs-21":obj.ticket.s21,"sdgs-22":obj.ticket.s22,"sdgs-23":obj.ticket.s23,
-          "sdgs-24":obj.ticket.s24,"sdgs-25":obj.ticket.s25,"sdgs-26":obj.ticket.s26,
-          "sdgs-27":obj.ticket.s27};
-
-  var taskWeight = {};
-  try {
-    taskWeight = tasks_submit(dataJSON);
-    // Set project weight to LocalStorage
-    setLocalStorage("project_weight", taskWeight);
-  } catch(e) {console.log(e);}
-
-  return taskWeight;
+    resolve(resultBool);
+  });
 }
 
 function updateNodeData(baseNodes, baseLinks) {
