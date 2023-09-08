@@ -92,15 +92,21 @@ function setPageInfo() {
   } else if (page == "wallet.html") {
     $("#nav-wallet").addClass("active");
   } else if (page == "edit-info.html") {
-    document.getElementById("email").innerHTML = getLocalStorage("email");
+    document.getElementById("email").value = getLocalStorage("email");
     document.getElementById("username").value = getLocalStorage("username");
 
     // Update avatar
     getAvatarImg(getLocalStorage("email"));
     pathAvatarImg = getLocalStorage("avatar_img");
-    var obj_img_avatar = document.getElementById("btn_avatar_img").firstChild;
-    obj_img_avatar.style.backgroundImage =
-      "url(" + HOST_URL_EID_DAEMON + pathAvatarImg + ")";
+    $("#avatar_img").css(
+      "background-image",
+      "url(" + HOST_URL_EID_DAEMON + pathAvatarImg + ")"
+    );
+
+    $("#change-password-button").on("click", (e) => {
+      e.preventDefault();
+      window.location.href = "/backend/change-pw.html";
+    });
   } else if (page == "signup.html" || page == "signin.html") {
     // Check if pass any task UUID and save to localStorage
     const queryString = window.location.search;

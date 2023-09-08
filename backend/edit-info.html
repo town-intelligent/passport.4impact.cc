@@ -72,50 +72,55 @@
           </nav>
           <div class="container">
             <div class="row mt-5 align-items-center">
-              <div class="col-md-7 pl-0">
+              <div class="col-md-7 pl-0 mb-4">
+
                 <div class="form-group row">
-                  <div class="col-4 pr-0">
-                    <p class="mb-0">電子郵件</p>
-                  </div>
-                  <div class="col-8 px-0">
-                    <p id="email" class="mb-0"></p>
+                  <label class="col-sm-2 col-form-label">電子郵件</label>
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      readonly
+                      class="form-control-plaintext"
+                      id="email"
+                    />
                   </div>
                 </div>
-                <div class="form-group row align-items-center">
-                  <label for="inputUserId" class="col-4 pr-0 mb-0"
-                    >使用者名稱</label
-                  >
-                  <div class="col-5 px-0">
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">使用者名稱</label>
+                  <div class="col-sm-10 input-group">
                     <input
                       id="username"
                       type="text"
-                      class="form-control form-control-sm"
+                      class="form-control"
+                      aria-label="Dollar amount (with dot and two decimal places)"
                     />
-                  </div>
-                  <div class="col-3 text-right">
-                    <a
-                      href="#"
-                      class="btn btn-primary btn-sm"
-                      onclick="edit_username()"
-                      >確認</a
-                    >
+                    <div class="input-group-append">
+                      <button class="btn btn-primary btn-sm" type="button" onclick="edit_username()">
+                        確認
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group row align-items-center">
-                  <label for="inputPassword" class="col-4 pr-0 mb-0"
-                    >Password</label
-                  >
-                  <div class="col-5 px-0">
-                    <p class="mb-0">********</p>
-                  </div>
-                  <div class="col-3 text-right">
-                    <a
-                      href="/backend/change-pw.html"
-                      class="btn btn-primary btn-sm"
-                      >編輯</a
-                    >
+
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Password</label>
+                  <div class="col-sm-10 input-group">
+                    <input
+                      type="text"
+                      class="form-control-plaintext"
+                      readonly
+                      aria-label="Dollar amount (with dot and two decimal places)"
+                      value="********"
+                    />
+                    <div class="input-group-append">
+                      <button id="change-password-button" class="btn btn-primary btn-sm rounded" type="button">
+                        編輯
+                      </button>
+                    </div>
                   </div>
                 </div>
+
                 <div>
                   <a class="btn btn-light btn-block" onclick="logout()"
                     ><img
@@ -127,7 +132,12 @@
               </div>
               <div class="col-md-5">
                 <div class="card">
-                  <button id="btn_avatar_img" onclick="upload_avatar_image()">
+                  <div
+                    id="btn_avatar_img"
+                    class="border-1"
+                    style="border: solid 2px #fff38d; cursor: pointer"
+                    onclick="upload_avatar_image()"
+                  >
                     <div
                       id="avatar_img"
                       class="bg-contain"
@@ -137,7 +147,7 @@
                         background-repeat: no-repeat;
                       "
                     ></div>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
