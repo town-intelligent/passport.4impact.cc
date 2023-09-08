@@ -21,6 +21,7 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="https://s3.amazonaws.com/builds.handlebarsjs.com/handlebars.min-v4.7.8.js"></script>
     <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
     <script src="/static/js/config.js"></script>
     <script src="/static/js/localStorage.js"></script>
@@ -31,6 +32,119 @@
     <script src="/static/js/gps.js"></script>
     <script src="/static/js/set-page-info.js"></script>
     <script src="/static/js/init.js"></script>
+    <script type="module">
+      import { renderHandlebars } from "/static/js/utils/handlebars.js";
+      $(document).ready(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var task = urlParams.get("task");
+        var gps = urlParams.get("gps");
+        var obj_parent_task = get_task_description(task);
+        var list_child_tasks = get_child_tasks(task);
+
+        const child_tasks = list_child_tasks.map((task_id) => {
+          const child_task = get_task_description(task_id);
+          const href = `location.href='/tasks/activity_participation.html?uuid=${child_task.uuid}&gps=${gps}'`;
+
+          const period = child_task.period;
+          if (parseInt(child_task.type_task) == 0) {
+            period = obj_parent_task.period;
+          }
+
+          const sdgs = Object.entries(child_task.weight)
+            .map(([key, value], index) => [
+              String(index + 1).padStart(2, "0"),
+              value,
+            ])
+            .filter(([key, value]) => parseInt(value) > 0)
+            .map(([key, value], index) => key);
+
+          return { ...child_task, sdgs, period, href };
+        });
+
+        const data = {
+          ...obj_parent_task,
+          child_tasks,
+        };
+        console.log(data);
+
+        renderHandlebars("activity", "tpl-activity", data);
+      });
+    </script>
+    <script id="tpl-activity" type="text/x-handlebars-template">
+      <div>
+        <div class="mt-4">
+          <p>
+            日期:
+            <span id="period"> {{period}}</span>
+          </p>
+          <ul>
+            <li style="font-size: 14px">
+              <p>{{name}}</p>
+            </li>
+          </ul>
+        </div>
+        <div class="table-responsive-sm">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col" width="30%" class="text-center">
+                  活動名稱
+                </th>
+                <th scope="col" width="30%" class="text-center">
+                  SDGs
+                </th>
+                <th scope="col" width="20%" class="text-center">
+                  時間
+                </th>
+                <th scope="col" class="text-center"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each child_tasks as |child_task|}}
+                <tr>
+                  <td
+                    class="align-middle"
+                    style="font-size: 12px; min-width: 200px;"
+                  >
+                    {{child_task.name}}
+                  </td>
+                  <td
+                    scope="row"
+                    class="align-middle"
+                    style="min-width: 200px;"
+                  >
+                    {{#each child_task.sdgs as |sdg|}}
+                      <img
+                        class="mr-2 mb-2"
+                        src="/static/imgs/SDGS/E_WEB_{{sdg}}.png"
+                        width="30px"
+                        height="30px"
+                      />
+                    {{/each}}
+                  </td>
+                  <td
+                    class="text-center align-middle"
+                    style="font-size: 12px; min-width: 150px;"
+                  >
+                    {{child_task.period}}
+                  </td>
+                  <td class="text-center align-middle">
+                    <div
+                      class="btn btn-primary btn-sm"
+                      onclick="{{ child_task.href }}"
+                      style="min-width: 150px;"
+                    >
+                      參與任務
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </script>
     <title></title>
   </head>
   <body onload="init();">
@@ -79,32 +193,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" id="dropdown"></div>
           </nav>
-          <div class="container-fluid">
-            <div class="mt-4">
-              <p>日期: <span id="period">2022 05/14 5/15 </span></p>
-              <ul>
-                <li style="font-size: 14px" id="overview">
-                  今年，竹山最有特色的車站【台西車站】將舉辦好感市集，
-                  集結有理念地方故事，一起於台西車站一樓大廳，與大家共襄盛舉，歡迎大家一起來認識這些人與那些人為地方用心與努力。
-                </li>
-              </ul>
-            </div>
-            <div class="table-responsive-sm">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col" width="30%" class="text-center">
-                      活動名稱
-                    </th>
-                    <th scope="col" width="30%" class="text-center">SDGs</th>
-                    <th scope="col" width="20%" class="text-center">時間</th>
-                    <th scope="col" class="text-center"></th>
-                  </tr>
-                </thead>
-                <tbody id="task_container"></tbody>
-              </table>
-            </div>
-          </div>
+          <div id="activity" class="container-fluid"></div>
         </div>
       </div>
     </div>
