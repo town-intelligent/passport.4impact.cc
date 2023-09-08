@@ -72,48 +72,24 @@
       });
     </script>
     <script id="tpl-activity" type="text/x-handlebars-template">
-      <div>
-        <div class="mt-4">
-          <p>
-            日期:
-            <span id="period"> {{period}}</span>
-          </p>
-          <ul>
-            <li style="font-size: 14px">
-              <p>{{name}}</p>
-            </li>
-          </ul>
-        </div>
-        <div class="table-responsive-sm">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col" width="30%" class="text-center">
-                  活動名稱
-                </th>
-                <th scope="col" width="30%" class="text-center">
-                  SDGs
-                </th>
-                <th scope="col" width="20%" class="text-center">
-                  時間
-                </th>
-                <th scope="col" class="text-center"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each child_tasks as |child_task|}}
-                <tr>
-                  <td
-                    class="align-middle"
-                    style="font-size: 12px; min-width: 200px;"
-                  >
+      <div class="mt-4">
+        <h4>{{name}}</h4>
+        <p>日期: {{period}} </p>
+        <div class="row">
+          {{#each child_tasks as |child_task|}}
+            <div class="col-xl-4 col-md-6 col-12">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h5 class="card-title">
                     {{child_task.name}}
-                  </td>
-                  <td
-                    scope="row"
-                    class="align-middle"
-                    style="min-width: 200px;"
-                  >
+                  </h5>
+                  <p class="card-text">
+                    時間：
+                    <small class="text-muted">{{child_task.period}}</small>
+                  </p>
+
+                  <h5>SDGs</h5>
+                  <p class="my-4" style="min-height: 50px;">
                     {{#each child_task.sdgs as |sdg|}}
                       <img
                         class="mr-2 mb-2"
@@ -122,26 +98,13 @@
                         height="30px"
                       />
                     {{/each}}
-                  </td>
-                  <td
-                    class="text-center align-middle"
-                    style="font-size: 12px; min-width: 150px;"
-                  >
-                    {{child_task.period}}
-                  </td>
-                  <td class="text-center align-middle">
-                    <div
-                      class="btn btn-primary btn-sm"
-                      onclick="{{ child_task.href }}"
-                      style="min-width: 150px;"
-                    >
-                      參與任務
-                    </div>
-                  </td>
-                </tr>
-              {{/each}}
-            </tbody>
-          </table>
+                  </p>
+
+                  <a href="#" class="btn btn-primary">參與任務</a>
+                </div>
+              </div>
+            </div>
+          {{/each}}
         </div>
       </div>
     </script>
