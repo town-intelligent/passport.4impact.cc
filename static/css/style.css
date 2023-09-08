@@ -46,3 +46,7 @@ background-position: center center;
 .border-warning {
   border-color: #f0ea3b !important;
 }
+
+.chart-container {
+  height: 400px;
+}

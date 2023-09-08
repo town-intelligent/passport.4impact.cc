@@ -96,3 +96,150 @@ export function draw_bar(
       });
   }
 }
+
+const filter_zero_item = (data, backgroundColor, images) => {
+  const newData = {};
+  const newBackgroundColor = [];
+  const newImages = [];
+  const keys = Object.keys(data);
+  for (const index in keys) {
+    const key = keys[index];
+    if (data[key] == 0) {
+      continue;
+    }
+
+    newData[key] = data[key];
+    if (Array.isArray(backgroundColor)) {
+      newBackgroundColor.push(backgroundColor[index]);
+    }
+
+    if (Array.isArray(images)) {
+      newImages.push(images[index]);
+    }
+  }
+
+  return {
+    data: newData,
+    backgroundColor: newBackgroundColor,
+    images: newImages,
+  };
+};
+
+const SDG_MAP = {
+  "sdgs-18": "人",
+  "sdgs-19": "文",
+  "sdgs-20": "地",
+  "sdgs-21": "產",
+  "sdgs-22": "景",
+  "sdgs-23": "德",
+  "sdgs-24": "智",
+  "sdgs-25": "體",
+  "sdgs-26": "群",
+  "sdgs-27": "美",
+};
+
+export const getMappedSdgData = (data) => {
+  const keys = Object.keys(data);
+  const newData = {};
+  for (const key of keys) {
+    const newKey = SDG_MAP[key];
+    if (newKey) {
+      newData[newKey] = data[key];
+    } else {
+      newData[key] = data[key];
+    }
+  }
+
+  return newData;
+};
+
+export const draw_bar_chart = ({
+  elementId,
+  title,
+  data,
+  images = [],
+  backgroundColor,
+  yAxisTitle = "關係人口數",
+  xAxisTitle = "指標",
+  xAxisDisplay = true,
+  skipZero = false,
+  titlePosition = "top",
+  titleFontSize = 24,
+  gridlineDisplay = false,
+}) => {
+  let ctx = document.getElementById(elementId);
+
+  if (skipZero) {
+    const filtered = filter_zero_item(data, backgroundColor, images);
+    data = filtered.data;
+    backgroundColor = filtered.backgroundColor;
+    images = filtered.images;
+  }
+
+  const chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      datasets: [
+        {
+          label: title,
+          data,
+          backgroundColor,
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      elements: {
+        bar: {
+          borderWidth: 2,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: yAxisTitle,
+          },
+          ticks: {
+            precision: 0,
+          },
+          grid: {
+            display: gridlineDisplay,
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: xAxisTitle,
+          },
+          display: xAxisDisplay,
+          grid: {
+            display: gridlineDisplay,
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: title,
+          font: { size: titleFontSize },
+          position: titlePosition,
+          padding: {
+            bottom: 50,
+          },
+        },
+        labels: {
+          render: "image",
+          images: images,
+        },
+      },
+    },
+  });
+
+  return chart;
+};
