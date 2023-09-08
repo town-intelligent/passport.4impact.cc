@@ -9,7 +9,7 @@ function set_task_in_page(obj) {
   col_md_4.className = "col-md-4";
 
   var card_p_3_mb_2 = document.createElement("div");
-  card_p_3_mb_2.className = "card p-3 mb-2";
+  card_p_3_mb_2.className = "card p-3 mb-2 text-center";
 
   var img = document.createElement("img");
   img.id = "task_cover_" + obj.uuid;
