@@ -1,0 +1,750 @@
+diff -bur ./backend/edit-info.html ../../eid.townway.com.tw/backend/edit-info.html
+--- ./backend/edit-info.html	2023-07-09 21:11:19.643610274 +0800
++++ ../../eid.townway.com.tw/backend/edit-info.html	2023-04-24 09:29:07.948723184 +0800
+@@ -12,34 +12,56 @@
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+     <link href="../static/css/style.css" rel="stylesheet" type="text/css">
+-    <link href="../static/css/loading.css" rel="stylesheet" type="text/css">
+     <script src="../static/js/config.js"></script>
+     <script src="../static/js/localStorage.js"></script>
+-    <script src="../static/js/file_handler.js"></script>
+     <script src="../static/js/auth.js"></script>
+     <script src="../static/js/navbar.js"></script>
+     <script src="../static/js/profile.js"></script>
+     <script src="../static/js/accounts.js"></script>
+-    <script type="module" src="../static/js/edit-info.js"></script>
+     <script src="../static/js/set-page-info.js"></script>
+     <script src="../static/js/init.js"></script>
+-    <script type="module">
+-      import { upload_avatar_image } from "../static/js/edit-info.js"
+-      window.upload_avatar_image = upload_avatar_image;
++    <script>
++      // http://jsfiddle.net/DerekL/3wRpA/
++      // https://stackoverflow.com/questions/53651409/writing-a-base64-string-to-file-in-python-not-working
++      // https://stackoverflow.com/questions/34116682/save-base64-image-python
++      /*The FileModal Class*/
++      function FileModal(accept) {
++        var callback = function(){};
++        return {
++          show: function() {
++            $("<input>").attr({
++                type: "file",
++                accept: accept
++              }).appendTo("body").hide().change(function(e){
++                var file = e.target.files[0],
++                reader = new FileReader();
++                reader.onload = function(progress){
++                callback(progress.target.result);
++              };
++              reader.readAsDataURL(file);
++            }).click();
++          },
++          set onload(c){ callback = c; }
++        }
++      }
++
++      function changeAvatarImg1() {
++        var file = new FileModal("image/png");
++        file.onload = function(d){
++          var resultBool = false;
++	        // Upload base64 image file
++	        resultBool = uploadAvatarImg(d);
++
++          if (resultBool == true) {
++            window.location.replace("/eid.html");
++          }
++        };
++        file.show();
++      }
+     </script>
+   </head>
+ 
+   <body onload="init();">
+-
+-    <div id="loading">
+-      <div id="loading-text">
+-        <p>上傳中 ...</p>
+-      </div>
+-      <div id="loading-spinner">
+-        <img src="/static/imgs/loading.png" alt="Loading">
+-      </div>
+-    </div>
+-
+     <div class="container-fluid border border-secondary border-width-lg min-vh-100">
+       <div class="row">
+         <div class="col">
+@@ -86,7 +108,7 @@
+                 </div>
+                 <div class="col-5">
+                   <div class="card">
+-	                  <button id="btn_avatar_img" onclick="upload_avatar_image()"><div id="avatar_img" class="bg-contain" style="background-image: url(../static/imgs/pages/user.png); height: 170px; background-repeat: no-repeat" ></div></button>
++	                  <button id="btn_avatar_img" onclick="changeAvatarImg1()"><div id="avatar_img" class="bg-contain" style="background-image: url(../static/imgs/pages/user.png); height: 170px; background-repeat: no-repeat" ></div></button>
+                   </div>
+                 </div>
+               </div>
+diff -bur ./CNAME ../../eid.townway.com.tw/CNAME
+--- ./CNAME	2023-07-05 12:47:58.701134474 +0800
++++ ../../eid.townway.com.tw/CNAME	2023-04-24 09:29:14.668820422 +0800
+@@ -1 +1 @@
+-beta-eid.townway.com.tw
+\ 檔案末沒有 newline 字元
++eid.townway.com.tw
+只在 ../../eid.townway.com.tw/.git 存在：COMMIT_EDITMSG
+diff -bur ./.git/config ../../eid.townway.com.tw/.git/config
+--- ./.git/config	2023-07-05 12:47:58.701134474 +0800
++++ ../../eid.townway.com.tw/.git/config	2023-03-27 20:45:55.868046450 +0800
+@@ -4,7 +4,7 @@
+ 	bare = false
+ 	logallrefupdates = true
+ [remote "origin"]
+-	url = https://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@github.com/town-intelligent-beta/eid.townway.com.tw
++	url = https://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@github.com/town-intelligent/eid.townway.com.tw
+ 	fetch = +refs/heads/*:refs/remotes/origin/*
+ [branch "main"]
+ 	remote = origin
+diff -bur ./.git/FETCH_HEAD ../../eid.townway.com.tw/.git/FETCH_HEAD
+--- ./.git/FETCH_HEAD	2023-07-09 21:11:19.615607312 +0800
++++ ../../eid.townway.com.tw/.git/FETCH_HEAD	2023-07-04 16:37:39.110847441 +0800
+@@ -1 +1,2 @@
+-1b85393827dd5a09c671641a146f9ab932a7b9aa		branch 'main' of https://github.com/town-intelligent-beta/eid.townway.com.tw
++55f2ba74e4c6d4c8d16552c7e64ee556d472ff37		branch 'main' of https://github.com/town-intelligent/eid.townway.com.tw
++36a2962beb7b880de8620cbcf38594a5917fb09e	not-for-merge	branch 'gh-pages' of https://github.com/town-intelligent/eid.townway.com.tw
+二元碼檔 ./.git/index 與 ../../eid.townway.com.tw/.git/index 不同
+diff -bur ./.git/logs/HEAD ../../eid.townway.com.tw/.git/logs/HEAD
+--- ./.git/logs/HEAD	2023-07-09 21:11:19.647610696 +0800
++++ ../../eid.townway.com.tw/.git/logs/HEAD	2023-07-04 22:56:27.759994675 +0800
+@@ -1,4 +1,16 @@
+-0000000000000000000000000000000000000000 e7f9c99fcad97a7e7086590076b577fe7f189f68 yillkid <yillkid@gmail.com> 1688532478 +0800	clone: from https://github.com/town-intelligent-beta/eid.townway.com.tw
+-e7f9c99fcad97a7e7086590076b577fe7f189f68 8f07660128d559ccb581a5391ade9ec7e95b935a yillkid <yillkid@gmail.com> 1688533130 +0800	pull: Fast-forward
+-8f07660128d559ccb581a5391ade9ec7e95b935a 12dafe1f7fe1af74f61741c3927563c3e3b04bd0 yillkid <yillkid@gmail.com> 1688533877 +0800	pull: Fast-forward
+-12dafe1f7fe1af74f61741c3927563c3e3b04bd0 1b85393827dd5a09c671641a146f9ab932a7b9aa yillkid <yillkid@gmail.com> 1688908279 +0800	pull: Fast-forward
++0000000000000000000000000000000000000000 cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 yillkid <yillkid@gmail.com> 1679920071 +0800	clone: from https://github.com/town-intelligent/eid.townway.com.tw
++cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 c006dd1b963614433546bf6cbeb9b05fdf60cf60 yillkid <yillkid@gmail.com> 1679920291 +0800	commit: feat: update
++c006dd1b963614433546bf6cbeb9b05fdf60cf60 e6aaacb652e83cfcdc12797d3eae9dff2887e885 yillkid <yillkid@gmail.com> 1679925167 +0800	commit: fix cname
++e6aaacb652e83cfcdc12797d3eae9dff2887e885 1c468dfdcb5ce380e8bf66e12bf395ce516de577 yillkid <yillkid@gmail.com> 1679925211 +0800	reset: moving to origin/main
++1c468dfdcb5ce380e8bf66e12bf395ce516de577 978c4446fa8843b3b20840e786c3b8477e7435a9 yillkid <yillkid@gmail.com> 1679925252 +0800	commit: update readme
++978c4446fa8843b3b20840e786c3b8477e7435a9 a2355201029e1293dbd83ac29ac4cce5bf018170 yillkid <yillkid@gmail.com> 1680938811 +0800	commit: Adjust table width
++a2355201029e1293dbd83ac29ac4cce5bf018170 80d1e7dc4c89dcf75bf14d31c1e24496f40f9828 yillkid <yillkid@gmail.com> 1681088760 +0800	commit: fix: hidden FB login
++80d1e7dc4c89dcf75bf14d31c1e24496f40f9828 f527176576c3835d1fa76dccbd36e1ae75f414f1 yillkid <yillkid@gmail.com> 1681137393 +0800	commit: 數位身分證-永續合作-指標呈現bug
++f527176576c3835d1fa76dccbd36e1ae75f414f1 08ee299f4fa3fb0d95deb3f990dd43e3f22bea55 yillkid <yillkid@gmail.com> 1681137761 +0800	commit: 永續專案 - 總體KPI 指標視覺調整
++08ee299f4fa3fb0d95deb3f990dd43e3f22bea55 b92672d43e6987f400f4fd218c94908da2948033 yillkid <yillkid@gmail.com> 1681794815 +0800	commit: file: gitignore
++b92672d43e6987f400f4fd218c94908da2948033 033d5b4136e178f4ce5d0c8091f1226afb737fa8 yillkid <yillkid@gmail.com> 1681794832 +0800	commit: feat: eID 領證流程簡化
++033d5b4136e178f4ce5d0c8091f1226afb737fa8 b53bb2cc3e701465f416e64447a9f49acac28056 yillkid <yillkid@gmail.com> 1681910275 +0800	commit: eID modules
++b53bb2cc3e701465f416e64447a9f49acac28056 70fd603f70e6c0809bea9027296dcf6bd6ef59c8 yillkid <yillkid@gmail.com> 1682299806 +0800	commit: feat: eID 領證流程簡化
++70fd603f70e6c0809bea9027296dcf6bd6ef59c8 4d2f903c4f257949be4397e2234f62ff481ade8b yillkid <yillkid@gmail.com> 1683181853 +0800	commit: fix: Bug: 未設定 child task，任務會顯示「已驗證」
++4d2f903c4f257949be4397e2234f62ff481ade8b 55f2ba74e4c6d4c8d16552c7e64ee556d472ff37 yillkid <yillkid@gmail.com> 1686027416 +0800	commit: fix: 權重重複計算
++55f2ba74e4c6d4c8d16552c7e64ee556d472ff37 53b2d8eef92b21cfb530a1a9fec9fd7a57b06e7e yillkid <yillkid@gmail.com> 1688482587 +0800	commit: fix: modify username
+diff -bur ./.git/logs/refs/heads/main ../../eid.townway.com.tw/.git/logs/refs/heads/main
+--- ./.git/logs/refs/heads/main	2023-07-09 21:11:19.647610696 +0800
++++ ../../eid.townway.com.tw/.git/logs/refs/heads/main	2023-07-04 22:56:27.759994675 +0800
+@@ -1,4 +1,16 @@
+-0000000000000000000000000000000000000000 e7f9c99fcad97a7e7086590076b577fe7f189f68 yillkid <yillkid@gmail.com> 1688532478 +0800	clone: from https://github.com/town-intelligent-beta/eid.townway.com.tw
+-e7f9c99fcad97a7e7086590076b577fe7f189f68 8f07660128d559ccb581a5391ade9ec7e95b935a yillkid <yillkid@gmail.com> 1688533130 +0800	pull: Fast-forward
+-8f07660128d559ccb581a5391ade9ec7e95b935a 12dafe1f7fe1af74f61741c3927563c3e3b04bd0 yillkid <yillkid@gmail.com> 1688533877 +0800	pull: Fast-forward
+-12dafe1f7fe1af74f61741c3927563c3e3b04bd0 1b85393827dd5a09c671641a146f9ab932a7b9aa yillkid <yillkid@gmail.com> 1688908279 +0800	pull: Fast-forward
++0000000000000000000000000000000000000000 cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 yillkid <yillkid@gmail.com> 1679920071 +0800	clone: from https://github.com/town-intelligent/eid.townway.com.tw
++cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 c006dd1b963614433546bf6cbeb9b05fdf60cf60 yillkid <yillkid@gmail.com> 1679920291 +0800	commit: feat: update
++c006dd1b963614433546bf6cbeb9b05fdf60cf60 e6aaacb652e83cfcdc12797d3eae9dff2887e885 yillkid <yillkid@gmail.com> 1679925167 +0800	commit: fix cname
++e6aaacb652e83cfcdc12797d3eae9dff2887e885 1c468dfdcb5ce380e8bf66e12bf395ce516de577 yillkid <yillkid@gmail.com> 1679925211 +0800	reset: moving to origin/main
++1c468dfdcb5ce380e8bf66e12bf395ce516de577 978c4446fa8843b3b20840e786c3b8477e7435a9 yillkid <yillkid@gmail.com> 1679925252 +0800	commit: update readme
++978c4446fa8843b3b20840e786c3b8477e7435a9 a2355201029e1293dbd83ac29ac4cce5bf018170 yillkid <yillkid@gmail.com> 1680938811 +0800	commit: Adjust table width
++a2355201029e1293dbd83ac29ac4cce5bf018170 80d1e7dc4c89dcf75bf14d31c1e24496f40f9828 yillkid <yillkid@gmail.com> 1681088760 +0800	commit: fix: hidden FB login
++80d1e7dc4c89dcf75bf14d31c1e24496f40f9828 f527176576c3835d1fa76dccbd36e1ae75f414f1 yillkid <yillkid@gmail.com> 1681137393 +0800	commit: 數位身分證-永續合作-指標呈現bug
++f527176576c3835d1fa76dccbd36e1ae75f414f1 08ee299f4fa3fb0d95deb3f990dd43e3f22bea55 yillkid <yillkid@gmail.com> 1681137761 +0800	commit: 永續專案 - 總體KPI 指標視覺調整
++08ee299f4fa3fb0d95deb3f990dd43e3f22bea55 b92672d43e6987f400f4fd218c94908da2948033 yillkid <yillkid@gmail.com> 1681794815 +0800	commit: file: gitignore
++b92672d43e6987f400f4fd218c94908da2948033 033d5b4136e178f4ce5d0c8091f1226afb737fa8 yillkid <yillkid@gmail.com> 1681794832 +0800	commit: feat: eID 領證流程簡化
++033d5b4136e178f4ce5d0c8091f1226afb737fa8 b53bb2cc3e701465f416e64447a9f49acac28056 yillkid <yillkid@gmail.com> 1681910275 +0800	commit: eID modules
++b53bb2cc3e701465f416e64447a9f49acac28056 70fd603f70e6c0809bea9027296dcf6bd6ef59c8 yillkid <yillkid@gmail.com> 1682299806 +0800	commit: feat: eID 領證流程簡化
++70fd603f70e6c0809bea9027296dcf6bd6ef59c8 4d2f903c4f257949be4397e2234f62ff481ade8b yillkid <yillkid@gmail.com> 1683181853 +0800	commit: fix: Bug: 未設定 child task，任務會顯示「已驗證」
++4d2f903c4f257949be4397e2234f62ff481ade8b 55f2ba74e4c6d4c8d16552c7e64ee556d472ff37 yillkid <yillkid@gmail.com> 1686027416 +0800	commit: fix: 權重重複計算
++55f2ba74e4c6d4c8d16552c7e64ee556d472ff37 53b2d8eef92b21cfb530a1a9fec9fd7a57b06e7e yillkid <yillkid@gmail.com> 1688482587 +0800	commit: fix: modify username
+diff -bur ./.git/logs/refs/remotes/origin/HEAD ../../eid.townway.com.tw/.git/logs/refs/remotes/origin/HEAD
+--- ./.git/logs/refs/remotes/origin/HEAD	2023-07-05 12:47:58.701134474 +0800
++++ ../../eid.townway.com.tw/.git/logs/refs/remotes/origin/HEAD	2023-03-27 20:27:51.811582056 +0800
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 e7f9c99fcad97a7e7086590076b577fe7f189f68 yillkid <yillkid@gmail.com> 1688532478 +0800	clone: from https://github.com/town-intelligent-beta/eid.townway.com.tw
++0000000000000000000000000000000000000000 cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 yillkid <yillkid@gmail.com> 1679920071 +0800	clone: from https://github.com/town-intelligent/eid.townway.com.tw
+diff -bur ./.git/logs/refs/remotes/origin/main ../../eid.townway.com.tw/.git/logs/refs/remotes/origin/main
+--- ./.git/logs/refs/remotes/origin/main	2023-07-09 21:11:19.615607312 +0800
++++ ../../eid.townway.com.tw/.git/logs/refs/remotes/origin/main	2023-07-04 22:56:30.268053743 +0800
+@@ -1,3 +1,14 @@
+-e7f9c99fcad97a7e7086590076b577fe7f189f68 8f07660128d559ccb581a5391ade9ec7e95b935a yillkid <yillkid@gmail.com> 1688533130 +0800	pull: fast-forward
+-8f07660128d559ccb581a5391ade9ec7e95b935a 12dafe1f7fe1af74f61741c3927563c3e3b04bd0 yillkid <yillkid@gmail.com> 1688533877 +0800	pull: fast-forward
+-12dafe1f7fe1af74f61741c3927563c3e3b04bd0 1b85393827dd5a09c671641a146f9ab932a7b9aa yillkid <yillkid@gmail.com> 1688908279 +0800	pull: fast-forward
++cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 c006dd1b963614433546bf6cbeb9b05fdf60cf60 yillkid <yillkid@gmail.com> 1679923168 +0800	update by push
++c006dd1b963614433546bf6cbeb9b05fdf60cf60 1c468dfdcb5ce380e8bf66e12bf395ce516de577 yillkid <yillkid@gmail.com> 1679925178 +0800	pull: fast-forward
++1c468dfdcb5ce380e8bf66e12bf395ce516de577 978c4446fa8843b3b20840e786c3b8477e7435a9 yillkid <yillkid@gmail.com> 1679925256 +0800	update by push
++978c4446fa8843b3b20840e786c3b8477e7435a9 a2355201029e1293dbd83ac29ac4cce5bf018170 yillkid <yillkid@gmail.com> 1680938813 +0800	update by push
++a2355201029e1293dbd83ac29ac4cce5bf018170 80d1e7dc4c89dcf75bf14d31c1e24496f40f9828 yillkid <yillkid@gmail.com> 1681088763 +0800	update by push
++80d1e7dc4c89dcf75bf14d31c1e24496f40f9828 f527176576c3835d1fa76dccbd36e1ae75f414f1 yillkid <yillkid@gmail.com> 1681137395 +0800	update by push
++f527176576c3835d1fa76dccbd36e1ae75f414f1 08ee299f4fa3fb0d95deb3f990dd43e3f22bea55 yillkid <yillkid@gmail.com> 1681137763 +0800	update by push
++08ee299f4fa3fb0d95deb3f990dd43e3f22bea55 b92672d43e6987f400f4fd218c94908da2948033 yillkid <yillkid@gmail.com> 1681794817 +0800	update by push
++b92672d43e6987f400f4fd218c94908da2948033 033d5b4136e178f4ce5d0c8091f1226afb737fa8 yillkid <yillkid@gmail.com> 1681794834 +0800	update by push
++033d5b4136e178f4ce5d0c8091f1226afb737fa8 b53bb2cc3e701465f416e64447a9f49acac28056 yillkid <yillkid@gmail.com> 1681910277 +0800	update by push
++b53bb2cc3e701465f416e64447a9f49acac28056 70fd603f70e6c0809bea9027296dcf6bd6ef59c8 yillkid <yillkid@gmail.com> 1682299808 +0800	update by push
++70fd603f70e6c0809bea9027296dcf6bd6ef59c8 4d2f903c4f257949be4397e2234f62ff481ade8b yillkid <yillkid@gmail.com> 1683181855 +0800	update by push
++4d2f903c4f257949be4397e2234f62ff481ade8b 55f2ba74e4c6d4c8d16552c7e64ee556d472ff37 yillkid <yillkid@gmail.com> 1686027418 +0800	update by push
++55f2ba74e4c6d4c8d16552c7e64ee556d472ff37 53b2d8eef92b21cfb530a1a9fec9fd7a57b06e7e yillkid <yillkid@gmail.com> 1688482590 +0800	update by push
+只在 ./.git/objects 存在：00
+只在 ./.git/objects 存在：01
+只在 ../../eid.townway.com.tw/.git/objects 存在：02
+只在 ../../eid.townway.com.tw/.git/objects 存在：03
+只在 ../../eid.townway.com.tw/.git/objects 存在：07
+只在 ../../eid.townway.com.tw/.git/objects 存在：08
+只在 ../../eid.townway.com.tw/.git/objects 存在：0b
+只在 ./.git/objects 存在：0e
+只在 ./.git/objects 存在：0f
+只在 ../../eid.townway.com.tw/.git/objects 存在：10
+只在 ../../eid.townway.com.tw/.git/objects 存在：11
+只在 ../../eid.townway.com.tw/.git/objects/12 存在：42098d29842a7b3d1170307a1c7013da0a971f
+只在 ./.git/objects/12 存在：dafe1f7fe1af74f61741c3927563c3e3b04bd0
+只在 ../../eid.townway.com.tw/.git/objects 存在：13
+只在 ../../eid.townway.com.tw/.git/objects 存在：14
+只在 ../../eid.townway.com.tw/.git/objects 存在：17
+只在 ./.git/objects 存在：18
+只在 ../../eid.townway.com.tw/.git/objects 存在：1a
+只在 ./.git/objects 存在：1b
+只在 ../../eid.townway.com.tw/.git/objects 存在：1c
+只在 ../../eid.townway.com.tw/.git/objects 存在：1d
+只在 ./.git/objects 存在：1f
+只在 ./.git/objects 存在：20
+只在 ../../eid.townway.com.tw/.git/objects 存在：21
+只在 ../../eid.townway.com.tw/.git/objects/22 存在：17653be51275bb2a329482cbec5a8e809087d6
+只在 ./.git/objects/22 存在：ca8961f87fe5bd2f3a43fa33f98bf600416f51
+只在 ./.git/objects 存在：23
+只在 ../../eid.townway.com.tw/.git/objects 存在：24
+只在 ./.git/objects 存在：25
+只在 ./.git/objects 存在：27
+只在 ../../eid.townway.com.tw/.git/objects 存在：28
+只在 ../../eid.townway.com.tw/.git/objects 存在：2a
+只在 ../../eid.townway.com.tw/.git/objects 存在：2b
+只在 ../../eid.townway.com.tw/.git/objects 存在：2c
+只在 ../../eid.townway.com.tw/.git/objects 存在：2e
+只在 ../../eid.townway.com.tw/.git/objects 存在：2f
+只在 ../../eid.townway.com.tw/.git/objects/30 存在：7a4aff8eeaf9f51917a2b85017af8e7cba9e8d
+只在 ../../eid.townway.com.tw/.git/objects/30 存在：c94555d0764b4d0e1b4ce1489ce0c87e6ae41a
+只在 ./.git/objects/30 存在：cc1c514e90129125813c800d841280daa34694
+只在 ../../eid.townway.com.tw/.git/objects 存在：34
+只在 ../../eid.townway.com.tw/.git/objects 存在：35
+只在 ../../eid.townway.com.tw/.git/objects 存在：38
+只在 ../../eid.townway.com.tw/.git/objects/39 存在：26e1c50b3ad2e20288d8c326b203621b85fd7d
+只在 ./.git/objects/39 存在：9522e6433bd39e90debcd23365a4a26b857001
+只在 ../../eid.townway.com.tw/.git/objects 存在：3b
+只在 ../../eid.townway.com.tw/.git/objects 存在：3d
+只在 ./.git/objects 存在：43
+只在 ../../eid.townway.com.tw/.git/objects 存在：44
+只在 ../../eid.townway.com.tw/.git/objects 存在：47
+只在 ../../eid.townway.com.tw/.git/objects 存在：48
+只在 ../../eid.townway.com.tw/.git/objects 存在：4b
+只在 ../../eid.townway.com.tw/.git/objects 存在：4d
+只在 ../../eid.townway.com.tw/.git/objects 存在：4e
+只在 ../../eid.townway.com.tw/.git/objects 存在：4f
+只在 ./.git/objects 存在：50
+只在 ../../eid.townway.com.tw/.git/objects 存在：53
+只在 ../../eid.townway.com.tw/.git/objects 存在：55
+只在 ../../eid.townway.com.tw/.git/objects 存在：56
+只在 ../../eid.townway.com.tw/.git/objects 存在：57
+只在 ../../eid.townway.com.tw/.git/objects 存在：59
+只在 ./.git/objects 存在：5a
+只在 ../../eid.townway.com.tw/.git/objects 存在：5b
+只在 ../../eid.townway.com.tw/.git/objects 存在：5e
+只在 ../../eid.townway.com.tw/.git/objects 存在：61
+只在 ../../eid.townway.com.tw/.git/objects 存在：62
+只在 ./.git/objects 存在：63
+只在 ../../eid.townway.com.tw/.git/objects 存在：64
+只在 ../../eid.townway.com.tw/.git/objects 存在：66
+只在 ./.git/objects 存在：6d
+只在 ../../eid.townway.com.tw/.git/objects 存在：6f
+只在 ../../eid.townway.com.tw/.git/objects 存在：70
+只在 ../../eid.townway.com.tw/.git/objects 存在：71
+只在 ../../eid.townway.com.tw/.git/objects 存在：74
+只在 ../../eid.townway.com.tw/.git/objects 存在：77
+只在 ../../eid.townway.com.tw/.git/objects 存在：79
+只在 ../../eid.townway.com.tw/.git/objects 存在：7a
+只在 ../../eid.townway.com.tw/.git/objects 存在：80
+只在 ../../eid.townway.com.tw/.git/objects/81 存在：1593c6da3b0b138ac784cdc2d00394c557b285
+只在 ./.git/objects/81 存在：16ac490ea0c7124cfe81f7dec2dec0693dc8bd
+只在 ../../eid.townway.com.tw/.git/objects/81 存在：b84e1293f96b6a2337c9ae7e2de6efd78308b9
+只在 ../../eid.townway.com.tw/.git/objects 存在：82
+只在 ../../eid.townway.com.tw/.git/objects/85 存在：15f6a8788b584b2d4f4b05dada09f76d5f5c93
+只在 ./.git/objects/85 存在：2f15dd75d10f22d56a5790f16ee5d7646d2d0e
+只在 ../../eid.townway.com.tw/.git/objects/85 存在：c02d3e5364e1193c0e2919bd76ae1eea237010
+只在 ../../eid.townway.com.tw/.git/objects 存在：87
+只在 ./.git/objects/8a 存在：025adf2401293a67d4f840095815b437a3df4a
+只在 ../../eid.townway.com.tw/.git/objects/8a 存在：895e3fc670628bd67b8f6299a1c40660a96c6f
+只在 ../../eid.townway.com.tw/.git/objects 存在：8b
+只在 ../../eid.townway.com.tw/.git/objects 存在：8e
+只在 ./.git/objects/8f 存在：07660128d559ccb581a5391ade9ec7e95b935a
+只在 ../../eid.townway.com.tw/.git/objects/8f 存在：37438b2f2c023d788dee0369d747b443fdce27
+只在 ./.git/objects/8f 存在：44ff03bd8f16b2b184becad0009a52249c19c3
+只在 ./.git/objects/8f 存在：ccd3b8544c488825da5a0ddf3d86daeb176740
+只在 ../../eid.townway.com.tw/.git/objects 存在：90
+只在 ./.git/objects/91 存在：a4e9935862787ce0df676a57158dad7fe743b3
+只在 ../../eid.townway.com.tw/.git/objects/91 存在：d47a6bed14763deb66dfae9736aef7bdd4efab
+只在 ../../eid.townway.com.tw/.git/objects 存在：92
+只在 ../../eid.townway.com.tw/.git/objects 存在：93
+只在 ../../eid.townway.com.tw/.git/objects 存在：95
+只在 ../../eid.townway.com.tw/.git/objects 存在：96
+只在 ../../eid.townway.com.tw/.git/objects 存在：97
+只在 ../../eid.townway.com.tw/.git/objects 存在：99
+只在 ../../eid.townway.com.tw/.git/objects/9b 存在：bac8f55cc7b6a76e0e6c92c02b03c7570bf87d
+只在 ./.git/objects/9b 存在：fb83806bc5cb8132c688018dac1fc7712d3340
+只在 ../../eid.townway.com.tw/.git/objects 存在：9d
+只在 ../../eid.townway.com.tw/.git/objects 存在：9e
+只在 ../../eid.townway.com.tw/.git/objects 存在：a2
+只在 ../../eid.townway.com.tw/.git/objects 存在：a3
+只在 ./.git/objects 存在：a6
+只在 ../../eid.townway.com.tw/.git/objects/a9 存在：a779fb47efccc8b9250d602ea60551651a6059
+只在 ./.git/objects/a9 存在：a9b7152aec1decad9679ce63452eb6c35d99c9
+只在 ../../eid.townway.com.tw/.git/objects/a9 存在：af2c4a8bde455fca7d35d749ee2f8cb0bd27f9
+只在 ../../eid.townway.com.tw/.git/objects 存在：aa
+只在 ../../eid.townway.com.tw/.git/objects 存在：ab
+只在 ../../eid.townway.com.tw/.git/objects 存在：ad
+只在 ../../eid.townway.com.tw/.git/objects 存在：ae
+只在 ../../eid.townway.com.tw/.git/objects 存在：b1
+只在 ../../eid.townway.com.tw/.git/objects 存在：b4
+只在 ../../eid.townway.com.tw/.git/objects 存在：b5
+只在 ../../eid.townway.com.tw/.git/objects 存在：b9
+只在 ../../eid.townway.com.tw/.git/objects 存在：bc
+只在 ../../eid.townway.com.tw/.git/objects 存在：c0
+只在 ../../eid.townway.com.tw/.git/objects 存在：c2
+只在 ./.git/objects/c3 存在：8b1b985f0b2d204c4c2431d316fa43ae62b42c
+只在 ../../eid.townway.com.tw/.git/objects/c3 存在：f73992a69cbb382906ff460a2fe2304704b863
+只在 ../../eid.townway.com.tw/.git/objects 存在：c4
+只在 ../../eid.townway.com.tw/.git/objects 存在：c6
+只在 ../../eid.townway.com.tw/.git/objects 存在：c7
+只在 ../../eid.townway.com.tw/.git/objects 存在：c8
+只在 ./.git/objects 存在：ca
+只在 ../../eid.townway.com.tw/.git/objects 存在：cc
+只在 ../../eid.townway.com.tw/.git/objects 存在：cd
+只在 ./.git/objects/d2 存在：27f6d6dcb46ec36f9b755772ba8e32a51a5269
+只在 ../../eid.townway.com.tw/.git/objects/d2 存在：5df7845cc722ad2191ba256bfb5a119ba35fbc
+只在 ../../eid.townway.com.tw/.git/objects 存在：d3
+只在 ./.git/objects 存在：d4
+只在 ./.git/objects/d7 存在：12c5ebaf3d4875177769fe6993e1958bbaecdd
+只在 ../../eid.townway.com.tw/.git/objects/d7 存在：6397b79a8f1e6d16bad789efda1a6db5058b84
+只在 ../../eid.townway.com.tw/.git/objects/d7 存在：f9ad51e64486ddd398cf660ad79350118118d5
+只在 ../../eid.townway.com.tw/.git/objects 存在：d9
+只在 ../../eid.townway.com.tw/.git/objects 存在：da
+只在 ../../eid.townway.com.tw/.git/objects 存在：db
+只在 ../../eid.townway.com.tw/.git/objects 存在：dc
+只在 ../../eid.townway.com.tw/.git/objects 存在：e0
+只在 ../../eid.townway.com.tw/.git/objects 存在：e1
+只在 ../../eid.townway.com.tw/.git/objects 存在：e2
+只在 ../../eid.townway.com.tw/.git/objects 存在：e6
+只在 ../../eid.townway.com.tw/.git/objects 存在：e7
+只在 ../../eid.townway.com.tw/.git/objects 存在：e8
+只在 ../../eid.townway.com.tw/.git/objects 存在：eb
+只在 ../../eid.townway.com.tw/.git/objects 存在：f0
+只在 ../../eid.townway.com.tw/.git/objects 存在：f2
+只在 ../../eid.townway.com.tw/.git/objects 存在：f3
+只在 ../../eid.townway.com.tw/.git/objects/f5 存在：27176576c3835d1fa76dccbd36e1ae75f414f1
+只在 ../../eid.townway.com.tw/.git/objects 存在：f6
+只在 ./.git/objects/f7 存在：7b0eb1d71ad90c4431f39f16210df7a432f709
+只在 ../../eid.townway.com.tw/.git/objects/f7 存在：921aac47f3bb8ac01ce2e2f822e2fba6af1a34
+只在 ../../eid.townway.com.tw/.git/objects/f7 存在：db9275c44e7946e32e99eebcf95dc6602f0a97
+只在 ../../eid.townway.com.tw/.git/objects 存在：f8
+只在 ../../eid.townway.com.tw/.git/objects 存在：f9
+只在 ../../eid.townway.com.tw/.git/objects 存在：fa
+只在 ../../eid.townway.com.tw/.git/objects 存在：fe
+只在 ./.git/objects/pack 存在：pack-5ada892b2e70e5b328296cb694e2ada16c96790c.idx
+只在 ./.git/objects/pack 存在：pack-5ada892b2e70e5b328296cb694e2ada16c96790c.pack
+只在 ../../eid.townway.com.tw/.git/objects/pack 存在：pack-6e0610f81d6cd07ae93fad2bc20c151501d65032.idx
+只在 ../../eid.townway.com.tw/.git/objects/pack 存在：pack-6e0610f81d6cd07ae93fad2bc20c151501d65032.pack
+diff -bur ./.git/ORIG_HEAD ../../eid.townway.com.tw/.git/ORIG_HEAD
+--- ./.git/ORIG_HEAD	2023-07-05 13:27:17.987974177 +0800
++++ ../../eid.townway.com.tw/.git/ORIG_HEAD	2023-07-04 16:37:39.122847542 +0800
+@@ -1 +1 @@
+-12dafe1f7fe1af74f61741c3927563c3e3b04bd0
++55f2ba74e4c6d4c8d16552c7e64ee556d472ff37
+diff -bur ./.git/packed-refs ../../eid.townway.com.tw/.git/packed-refs
+--- ./.git/packed-refs	2023-07-05 12:47:58.697134647 +0800
++++ ../../eid.townway.com.tw/.git/packed-refs	2023-03-27 20:27:51.811582056 +0800
+@@ -1,2 +1,3 @@
+ # pack-refs with: peeled fully-peeled sorted 
+-e7f9c99fcad97a7e7086590076b577fe7f189f68 refs/remotes/origin/main
++36a2962beb7b880de8620cbcf38594a5917fb09e refs/remotes/origin/gh-pages
++cbe9b4bbdf02fb3d545d4b5324a446c6abea5a45 refs/remotes/origin/main
+diff -bur ./.git/refs/heads/main ../../eid.townway.com.tw/.git/refs/heads/main
+--- ./.git/refs/heads/main	2023-07-09 21:11:19.647610696 +0800
++++ ../../eid.townway.com.tw/.git/refs/heads/main	2023-07-04 22:56:27.759994675 +0800
+@@ -1 +1 @@
+-1b85393827dd5a09c671641a146f9ab932a7b9aa
++53b2d8eef92b21cfb530a1a9fec9fd7a57b06e7e
+diff -bur ./.git/refs/remotes/origin/main ../../eid.townway.com.tw/.git/refs/remotes/origin/main
+--- ./.git/refs/remotes/origin/main	2023-07-09 21:11:19.615607312 +0800
++++ ../../eid.townway.com.tw/.git/refs/remotes/origin/main	2023-07-04 22:56:30.264053649 +0800
+@@ -1 +1 @@
+-1b85393827dd5a09c671641a146f9ab932a7b9aa
++53b2d8eef92b21cfb530a1a9fec9fd7a57b06e7e
+diff -bur ./.gitignore ../../eid.townway.com.tw/.gitignore
+--- ./.gitignore	2023-07-05 12:47:58.701134474 +0800
++++ ../../eid.townway.com.tw/.gitignore	2023-04-18 13:13:17.013930766 +0800
+@@ -1,7 +1,2 @@
+ *.swp
+ *.sh
+-CNAME
+-config.js
+-README.md
+-desktop.ini
+--workspace
+只在 ../../eid.townway.com.tw/ 存在：git.sh
+diff -bur ./launch.sh ../../eid.townway.com.tw/launch.sh
+--- ./launch.sh	2023-07-05 12:49:33.464305745 +0800
++++ ../../eid.townway.com.tw/launch.sh	2023-04-24 09:29:21.816923483 +0800
+@@ -1 +1 @@
+-chromium-browser --incognito https://beta-eid.townway.com.tw
++google-chrome-stable --incognito https://eid.townway.com.tw/accounts/signin.html
+只在 ./ 存在：log.txt
+diff -bur ./README.md ../../eid.townway.com.tw/README.md
+--- ./README.md	2023-07-05 13:11:17.618077768 +0800
++++ ../../eid.townway.com.tw/README.md	2023-04-24 09:29:07.956723300 +0800
+@@ -1,4 +1,4 @@
+ # eid-web
+ 
+ ## Stable release
+-- https://alpha-eid.townway.com.tw
++- https://eid.townway.com.tw
+只在 ./static/css 存在：loading.css
+只在 ../../eid.townway.com.tw/static/html5-qrcode/assets 存在：README.md
+只在 ../../eid.townway.com.tw/static/html5-qrcode/dist 存在：README.md
+只在 ../../eid.townway.com.tw/static/html5-qrcode/examples 存在：electron
+只在 ../../eid.townway.com.tw/static/html5-qrcode/examples/html5 存在：README.md
+只在 ../../eid.townway.com.tw/static/html5-qrcode/examples/react 存在：README.md
+只在 ../../eid.townway.com.tw/static/html5-qrcode/examples/vuejs 存在：README.md
+只在 ../../eid.townway.com.tw/static/html5-qrcode 存在：README.md
+只在 ../../eid.townway.com.tw/static/html5-qrcode 存在：scripts
+只在 ../../eid.townway.com.tw/static/html5-qrcode 存在：test
+只在 ./static/imgs 存在：loading.png
+diff -bur ./static/js/accounts.js ../../eid.townway.com.tw/static/js/accounts.js
+--- ./static/js/accounts.js	2023-07-09 21:11:19.643610274 +0800
++++ ../../eid.townway.com.tw/static/js/accounts.js	2023-04-24 09:29:08.024724285 +0800
+@@ -55,6 +55,33 @@
+   });
+ }
+ 
++function uploadAvatarImg(base64Img) {
++  var dataJSON = {};
++  var resultBool = false;
++  dataJSON.email = getLocalStorage("email");
++  dataJSON.img = base64Img;
++  $.ajax({
++    url: HOST_URL_EID_DAEMON + "/accounts/modify",
++    type: "POST",
++    async: false,
++    crossDomain: true,
++    data:  dataJSON,
++    success: function(returnData) {
++      const obj = JSON.parse(returnData);
++      if (obj.result) {
++        resultBool = true;
++      } else {
++        resultBool = false;
++      }
++    },
++    error: function(xhr, ajaxOptions, thrownError){
++      console.log(thrownError);
++      resultBool = false;
++    }
++  });
++
++  return resultBool;
++}
+ 
+ function modify_username(username) {
+   // Modify account
+只在 ./static/js 存在：activity_participation.js
+diff -bur ./static/js/config.js ../../eid.townway.com.tw/static/js/config.js
+--- ./static/js/config.js	2023-07-05 12:58:50.600292086 +0800
++++ ../../eid.townway.com.tw/static/js/config.js	2023-04-24 09:29:33.625092921 +0800
+@@ -1,3 +1,3 @@
+ // Host
+-HOST_URL_EID_DAEMON = "https://beta-eid-backend.townway.com.tw";
+-HOST_URL_TPLANET_DAEMON = "https://beta-tplanet-backend.townway.com.tw";
++HOST_URL_EID_DAEMON = "https://eid-backend.townway.com.tw";
++HOST_URL_TPLANET_DAEMON = "https://tplanet-backend.townway.com.tw";
+只在 ./static/js 存在：edit-info.js
+只在 ./static/js 存在：file_handler.js
+diff -bur ./static/js/foot_print.js ../../eid.townway.com.tw/static/js/foot_print.js
+--- ./static/js/foot_print.js	2023-07-09 21:11:19.643610274 +0800
++++ ../../eid.townway.com.tw/static/js/foot_print.js	2023-06-06 12:56:53.976921622 +0800
+@@ -1,33 +1,3 @@
+-async function submitTaskTickets(task_UUID) {
+-  return new Promise(async (resolve, reject) => {
+-    if (getLocalStorage(task_UUID)=== "") {
+-      return;
+-    }
+-
+-    obj = JSON.parse(getLocalStorage(task_UUID));
+-    var dataJSON = {"uuid": task_UUID,"sdgs-1":obj.ticket.s1,"sdgs-2":obj.ticket.s2,
+-      "sdgs-3":obj.ticket.s3,"sdgs-4":obj.ticket.s4,"sdgs-5":obj.ticket.s5,
+-      "sdgs-6":obj.ticket.s6,"sdgs-7":obj.ticket.s7,"sdgs-8":obj.ticket.s8,
+-      "sdgs-9":obj.ticket.s9,"sdgs-10":obj.ticket.s10,"sdgs-11":obj.ticket.s11,
+-      "sdgs-12":obj.ticket.s12,"sdgs-13":obj.ticket.s13,"sdgs-14":obj.ticket.s14,
+-      "sdgs-15":obj.ticket.s15,"sdgs-16":obj.ticket.s16,"sdgs-17":obj.ticket.s17,
+-      "sdgs-18":obj.ticket.s18,"sdgs-19":obj.ticket.s19,"sdgs-20":obj.ticket.s20,
+-      "sdgs-21":obj.ticket.s21,"sdgs-22":obj.ticket.s22,"sdgs-23":obj.ticket.s23,
+-      "sdgs-24":obj.ticket.s24,"sdgs-25":obj.ticket.s25,"sdgs-26":obj.ticket.s26,
+-      "sdgs-27":obj.ticket.s27};
+-
+-    var taskWeight = {};
+-    try {
+-      taskWeight = tasks_submit(dataJSON);
+-      // Set project weight to LocalStorage
+-      setLocalStorage("project_weight", taskWeight);
+-    } catch(e) {console.log(e);}
+-
+-    resolve(taskWeight);
+-  });
+-}
+-
+-
+ function addWeight(w1, w2) {
+ 
+   const combined = [w1, w2].reduce((a, obj) => {
+@@ -40,8 +10,7 @@
+   return combined;
+ }
+ 
+-function submitTaskComment() {
+-  return new Promise(async (resolve, reject) => {
++function submitTaskComment(task_UUID) {
+     // Get task UUID
+     var queryString = window.location.search;
+     var urlParams = new URLSearchParams(queryString);
+@@ -56,19 +25,45 @@
+     img = img.replace('url("', '');
+     img = img.replace('")', '');
+ 
+-    dataJSON.img = img;//getLocalStorage("commentImg"); // img; // getLocalStorage("commentImg");
++  dataJSON.img = getLocalStorage("commentImg"); // img; // getLocalStorage("commentImg");
+ 
+     var resultBool = false;
+     resultBool = comment_project(dataJSON);
+ 
+-/*     if (resultBool == true) {
++  if (resultBool == true) {
+       alert("上傳成功!");
+     } else {
+       alert("上傳失敗，請檢查您的圖檔是否正確！")
+-    } */
++  }
+ 
+-    resolve(resultBool);
+-  });
++  return;
++}
++
++function submitTaskTickets(task_UUID) {
++  if (getLocalStorage(task_UUID)=== "") {
++    return;
++  }
++
++  obj = JSON.parse(getLocalStorage(task_UUID));
++  var dataJSON = {"uuid": task_UUID,"sdgs-1":obj.ticket.s1,"sdgs-2":obj.ticket.s2,
++          "sdgs-3":obj.ticket.s3,"sdgs-4":obj.ticket.s4,"sdgs-5":obj.ticket.s5,
++          "sdgs-6":obj.ticket.s6,"sdgs-7":obj.ticket.s7,"sdgs-8":obj.ticket.s8,
++          "sdgs-9":obj.ticket.s9,"sdgs-10":obj.ticket.s10,"sdgs-11":obj.ticket.s11,
++          "sdgs-12":obj.ticket.s12,"sdgs-13":obj.ticket.s13,"sdgs-14":obj.ticket.s14,
++          "sdgs-15":obj.ticket.s15,"sdgs-16":obj.ticket.s16,"sdgs-17":obj.ticket.s17,
++          "sdgs-18":obj.ticket.s18,"sdgs-19":obj.ticket.s19,"sdgs-20":obj.ticket.s20,
++          "sdgs-21":obj.ticket.s21,"sdgs-22":obj.ticket.s22,"sdgs-23":obj.ticket.s23,
++          "sdgs-24":obj.ticket.s24,"sdgs-25":obj.ticket.s25,"sdgs-26":obj.ticket.s26,
++          "sdgs-27":obj.ticket.s27};
++
++  var taskWeight = {};
++  try {
++    taskWeight = tasks_submit(dataJSON);
++    // Set project weight to LocalStorage
++    setLocalStorage("project_weight", taskWeight);
++  } catch(e) {console.log(e);}
++
++  return taskWeight;
+ }
+ 
+ function updateNodeData(baseNodes, baseLinks) {
+diff -bur ./static/js/GoogleOAuth.js ../../eid.townway.com.tw/static/js/GoogleOAuth.js
+--- ./static/js/GoogleOAuth.js	2023-07-05 13:11:17.618077768 +0800
++++ ../../eid.townway.com.tw/static/js/GoogleOAuth.js	2023-04-24 09:29:08.024724285 +0800
+@@ -67,6 +67,7 @@
+ 				let str = JSON.stringify(res.result);//將物件列化成string，方便顯示結果在畫面上
+ 				//顯示授權你網站存取的用戶個資
+ 				// document.getElementById('content').innerHTML = str;
++				console.log("hello, Google oauth success!, the response = " + str);
+ 				//↑通常metadata標記primary:true的個資就是你該抓的資料
+ 				//請再自行Parse JSON，可以將JSON字串丟到線上parse工具查看：http://json.parser.online.fr/
+ 				//最終，取得用戶個資後看要填在畫面表單上或是透過Ajax儲存到資料庫(記得是傳id_token給你的Web Server而不是明碼的user_id喔)，本範例就不贅述，請自行努力XD
+diff -bur ./tasks/activity_participation.html ../../eid.townway.com.tw/tasks/activity_participation.html
+--- ./tasks/activity_participation.html	2023-07-09 21:11:19.643610274 +0800
++++ ../../eid.townway.com.tw/tasks/activity_participation.html	2023-04-24 09:29:08.024724285 +0800
+@@ -12,39 +12,118 @@
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+-  <link href="/static/css/loading.css" rel="stylesheet" type="text/css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   <script src="../static/js/config.js"></script>
+   <script src="../static/js/auth.js"></script>
+   <script src="../static/js/navbar.js"></script>
+   <script src="../static/js/localStorage.js"></script>
+-  <script src="../static/js/file_handler.js"></script>
+   <script src="../static/js/plan.js"></script>
+   <script src="../static/js/tasks.js"></script>
+   <script src="../static/js/issues.js"></script>
+   <script src="../static/js/foot_print.js"></script>
+   <script src="../static/js/gps.js"></script>
+   <script src="../static/js/set-page-info.js"></script>
+-  <script type="mpdule" src="../static/js/activity_participation.js"></script>
+   <script src="../static/js/init.js"></script>
+-  <script type="module">
+-    import { upload_foot_print_img, prepare_submit_project_comment } from "../static/js/activity_participation.js"
+-    window.upload_foot_print_img = upload_foot_print_img;
+-    window.prepare_submit_project_comment = prepare_submit_project_comment;
++  <script>
++    // http://jsfiddle.net/DerekL/3wRpA/
++    // https://stackoverflow.com/questions/53651409/writing-a-base64-string-to-file-in-python-not-working
++    // https://stackoverflow.com/questions/34116682/save-base64-image-python
++    /*The FileModal Class*/
++    function FileModal(accept){
++      var callback = function(){};
++      return {
++        show: function(){
++          $("<input>").attr({
++            type: "file",
++            accept: accept
++          }).appendTo("body").hide().change(function(e){
++            var file = e.target.files[0],
++            reader = new FileReader();
++            reader.onload = function(progress){
++              callback(progress.target.result);
++            };
++          reader.readAsDataURL(file);
++          }).click();
++        },
++        set onload(c){ callback = c; }
++      }
++    }
++    // --- --- ---
++    function previewImg(base64Img) {
++      document.getElementById("id_upload_foot_print_img").style.backgroundImage = 'url(\'' + base64Img + '\')';
++      document.getElementById("id_upload_foot_print_img").style.width = "320px"; 
++      document.getElementById("id_upload_foot_print_img").style.height = "240px";
++      setLocalStorage("commentImg", base64Img);
++    } 
++    // --- --- ---
++    // Takes a data URI and returns the Data URI corresponding to the resized image at the wanted size.
++    function resizedataURL(datas, wantedWidth, wantedHeight){
++      return new Promise(async function(resolve,reject){
++        var img = document.createElement('img');
++      
++        img.onload = function()
++        {
++          var canvas = document.createElement('canvas');
++          var ctx = canvas.getContext('2d');
++          canvas.width = wantedWidth;
++          canvas.height = wantedHeight;
++          ctx.drawImage(this, 0, 0, wantedWidth, wantedHeight);
++          var dataURI = canvas.toDataURL();
++          resolve(dataURI);
++      };
++      img.src = datas;
++    })
++  } // Usage : var newDataURI = await resizedataURL('yourDataURIHere', 50, 50);
++  // --- --- ---
++  function upload_foot_print_img() {
++    var file = new FileModal("image/*");
++    file.onload = async function(d){
++
++    if (d.length > 1000000) {
++      d = await resizedataURL(d, 800, 600);
++    }
++
++    previewImg(d);
++    };
++    file.show();
++  }
++  // --- --- ---
++  function submit_project_comment() {
++    // Get task
++    var queryString = window.location.search;
++    var urlParams = new URLSearchParams(queryString);
++    var uuid = urlParams.get("uuid");
++    var obj_target = get_task_description(uuid);
++    var content = obj_target.content.replace(/'/g, '"')
++    var obj_target_content = JSON.parse(content);
++    
++    // TODO: New weight support
++    var dataJSON = {"s1":"0", "s2":"0", "s3":"0", "s4":"0", "s5":"0", "s6":"0", "s7":"0", 
++        "s8":"0", "s9":"0", "s10":"0", "s11":"0", "s12":"0", "s13":"0", "s14":"0", "s15":"0", "s16":"0", "s17":"0",
++        "s18":"0", "s19":"0", "s20":"0", "s21":"0", "s22":"0", "s23":"0", "s24":"0", "s25":"0", "s126":"0", "s27":"0"}; 
++    obj_target.ticket =  dataJSON;
++
++    for (let index = 1; index <= 27; index ++) {
++      obj_target.ticket["s" + index] = obj_target_content["sdgs-" + index];
++    }
++
++    // Set ticket to localStorage
++    var str_obj_uuid = JSON.stringify(obj_target)
++    setLocalStorage(uuid, str_obj_uuid);
++
++    // Submit task tickets
++    submitTaskTickets(uuid);
++
++    // SubmitTaskComment();
++    submitTaskComment(uuid);
++
++    // Redirect
++    window.location.href = "/foot_print.html";
++  }
+   </script>
+   <title></title>
+ </head>
+ <body onload="init();">
+-
+-  <div id="loading">
+-    <div id="loading-text">
+-      <p>上傳中 ...</p>
+-    </div>
+-    <div id="loading-spinner">
+-      <img src="/static/imgs/loading.png" alt="Loading">
+-    </div>
+-  </div>
+-
+   <div class="container-fluid border border-warning border-width-lg min-vh-100">
+     <div class="row">
+       <div class="col">
+@@ -78,22 +157,11 @@
+         <div class="container-fluid">
+           <form>
+             <div class="row mt-3">
+-              <!-- <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12"> -->
+                 <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
+-
+-                  <div class="form-row">
+-                    <div class="form-group col-12 mb-1">
+-
+-
+                 <div id="img_block" class="border d-flex align-items-center justify-content-center h-100">
+-			            <!--<img src="/static/imgs/image_icon.svg" width="100"upload_foot_print_imgupload_foot_print_imgupload_foot_print_img height="100" alt="">-->
+-		              <button type="button" id="btn_foot_print_img" onclick="upload_foot_print_img()">
+-                    <div id="id_upload_foot_print_img" class="bg-contain" style="background-image: url(../static/imgs/image_icon.svg); width: 100px;  height: 100px; background-repeat: no-repeat" ></div>
+-                  </button>
++			            <!--<img src="/static/imgs/image_icon.svg" width="100" height="100" alt="">-->
++		              <button type="button" id="btn_foot_print_img" onclick="upload_foot_print_img()"><div id="id_upload_foot_print_img" class="bg-contain" style="background-image: url(../static/imgs/image_icon.svg); width: 100px;  height: 100px; background-repeat: no-repeat" ></div></button>
+                 </div>
+-</div>
+-</div>
+-
+               </div>
+               <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
+                 <div class="form-row">
+@@ -135,7 +203,7 @@
+               </div>
+               <div class="col-12">
+                 <div class="text-center my-3">
+-                  <button type="button" class="btn btn-primary" onclick="prepare_submit_project_comment()">提交</button>
++                  <button type="button" class="btn btn-primary" onclick="submit_project_comment()">提交</button>
+                 </div>
+               </div>
+             </div>
