@@ -4,12 +4,12 @@ function update_ticket(uuid_target, obj_target) {
 
 function set_task_in_page(obj) {
   var elem_issues_list = document.getElementById("issues-list");
-  
+
   var col_md_4 = document.createElement("div");
   col_md_4.className = "col-md-4";
 
   var card_p_3_mb_2 = document.createElement("div");
-  card_p_3_mb_2.className = "card p-3 mb-2";
+  card_p_3_mb_2.className = "card p-3 mb-2 text-center";
 
   var img = document.createElement("img");
   img.id = "task_cover_" + obj.uuid;
@@ -31,7 +31,7 @@ function set_task_in_page(obj) {
     obj_parent = overlay_on_task(img, obj_parent);
   }
 
-  var a = document.createElement("a"); 
+  var a = document.createElement("a");
   a.src = obj.thumbnail;
   a.href = "/tasks/activity_convey_ideas.html?task=" + obj.uuid + "&gps=" + obj.gps;
 
@@ -66,9 +66,9 @@ function get_task_info(req_uuid_task, set_page = 1) {
   try {
     setLocalStorage(resultJSON.uuid, JSON.stringify(resultJSON));
     // Set ticket
-    var dataJSON = {"s1":"0", "s2":"0", "s3":"0", "s4":"0", "s5":"0", "s6":"0", "s7":"0", 
+    var dataJSON = {"s1":"0", "s2":"0", "s3":"0", "s4":"0", "s5":"0", "s6":"0", "s7":"0",
     "s8":"0", "s9":"0", "s10":"0", "s11":"0", "s12":"0", "s13":"0", "s14":"0", "s15":"0", "s16":"0", "s17":"0"};
-  
+
     resultJSON.ticket =  dataJSON;
     update_ticket(req_uuid_task, resultJSON);
 
@@ -94,8 +94,8 @@ function list_issues(email) {
         if (obj_uuid.ticket != null) {
           target_ticket = obj_uuid.ticket;
         }
-      } 
-      
+      }
+
       if( getLocalStorage(resultJSON.uuid[i]) == "" || obj_uuid.ticket == "") {
         get_task_info(resultJSON.uuid[i]);
       } else {
