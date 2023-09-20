@@ -1,83 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <link href="/static/css/style.css" rel="stylesheet" type="text/css">
-  <script src="/static/js/config.js"></script>
-  <script src="/static/js/localStorage.js"></script>
-  <script src="/static/js/navbar.js"></script>
-  <script src="/static/js/auth.js"></script>
-  <script src="/static/js/tasks.js"></script>
-  <script src="/static/js/issues.js"></script>
-  <script src="/static/js/gps.js"></script>
-  <script src="/static/js/set-page-info.js"></script>
-  <script src="/static/js/init.js"></script>
-  <title></title>
-</head>
-<body onload="init();">
-  <div class="container-fluid border border-warning border-width-lg min-vh-100">
-    <div class="row">
-      <div class="col">
-        <nav class="navbar navbar-expand-sm navbar-light bg-white align-items-center px-0">
-          <a class="navbar-brand mr-3" href="/index.html">
-            <img class="logo-md" src="/static/imgs/eID-logo.png">
-          </a>
-          <a class="navbar-brand mr-0 ml-auto d-sm-none" href="/backend/edit-info.html">
-            <img style="width: 45px"src="/static/imgs/user-edit-solid.svg">
-          </a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://s3.amazonaws.com/builds.handlebarsjs.com/handlebars.min-v4.7.8.js"></script>
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/localStorage.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/tasks.js"></script>
+    <script src="/static/js/issues.js"></script>
+    <script src="/static/js/gps.js"></script>
+    <script src="/static/js/set-page-info.js"></script>
+    <script src="/static/js/init.js"></script>
+    <script type="module">
+      import { renderHandlebars } from "/static/js/utils/handlebars.js";
+      $(document).ready(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var task = urlParams.get("task");
+        var gps = urlParams.get("gps");
+        var obj_parent_task = get_task_description(task);
+        var list_child_tasks = get_child_tasks(task);
+
+        const child_tasks = list_child_tasks.map((task_id) => {
+          const child_task = get_task_description(task_id);
+          const href = `location.href='/tasks/activity_participation.html?uuid=${child_task.uuid}&gps=${gps}'`;
+
+          const period = child_task.period;
+          if (parseInt(child_task.type_task) == 0) {
+            period = obj_parent_task.period;
+          }
+
+          const sdgs = Object.entries(child_task.weight)
+            .map(([key, value], index) => [
+              String(index + 1).padStart(2, "0"),
+              value,
+            ])
+            .filter(([key, value]) => parseInt(value) > 0)
+            .map(([key, value], index) => key);
+
+          return { ...child_task, sdgs, period, href };
+        });
+
+        const data = {
+          ...obj_parent_task,
+          child_tasks,
+        };
+        console.log(data);
+
+        renderHandlebars("activity", "tpl-activity", data);
+      });
+    </script>
+    <script id="tpl-activity" type="text/x-handlebars-template">
+      <div class="mt-4">
+        <h4>{{name}}</h4>
+        <p>日期: {{period}} </p>
+        <div class="row">
+          {{#each child_tasks as |child_task|}}
+            <div class="col-xl-4 col-md-6 col-12">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{child_task.name}}
+                  </h5>
+                  <p class="card-text">
+                    時間：
+                    <small class="text-muted">{{child_task.period}}</small>
+                  </p>
+
+                  <h5>SDGs</h5>
+                  <p class="my-4" style="min-height: 50px;">
+                    {{#each child_task.sdgs as |sdg|}}
+                      <img
+                        class="mr-2 mb-2"
+                        src="/static/imgs/SDGS/E_WEB_{{sdg}}.png"
+                        width="30px"
+                        height="30px"
+                      />
+                    {{/each}}
+                  </p>
+
+                  <a href="#" class="btn btn-primary">參與任務</a>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </script>
+    <title></title>
+  </head>
+  <body onload="init();">
+    <div
+      class="container-fluid border border-warning border-width-lg min-vh-100"
+    >
+      <div class="row">
+        <div class="col">
+          <nav
+            class="navbar navbar-expand-sm navbar-light bg-white align-items-center px-0"
+          >
+            <a class="navbar-brand mr-3" href="/index.html">
+              <img class="logo-md" src="/static/imgs/eID-logo.png" />
+            </a>
+            <a
+              class="navbar-brand mr-0 ml-auto d-sm-none"
+              href="/backend/edit-info.html"
+            >
+              <img style="width: 45px" src="/static/imgs/user-edit-solid.svg" />
+            </a>
             <ul class="nav nav-tabs w-100 mr-sm-3 mt-3 mt-sm-0">
               <li class="nav-item">
-                <a class="nav-link px-2 px-sm-3" href="/eid.html">身分證</a>
+                <a class="nav-link px-2 px-sm-3" href="/eid.html">關於</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link px-2 active px-sm-3" href="/issues.html">永續合作</a>
+                <a class="nav-link px-2 active px-sm-3" href="/issues.html"
+                  >永續合作</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link px-2 px-sm-3" href="/foot_print.html">數位足跡</a>
+                <a class="nav-link px-2 px-sm-3" href="/foot_print.html"
+                  >數位足跡</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link px-2 px-sm-3" href="/wallet.html">領取任務</a>
+                <a class="nav-link px-2 px-sm-3" href="/wallet.html"
+                  >領取任務</a
+                >
               </li>
             </ul>
-            <a class="navbar-brand mr-0 ml-auto d-none d-sm-block" href="/backend/edit-info.html">
-              <img style="width: 45px"src="/static/imgs/user-edit-solid.svg">
+            <a
+              class="navbar-brand mr-0 ml-auto d-none d-sm-block"
+              href="/backend/edit-info.html"
+            >
+              <img style="width: 45px" src="/static/imgs/user-edit-solid.svg" />
             </a>
-            <div class="dropdown-menu dropdown-menu-right" id="dropdown">
-            </div>
-        </nav>
-        <div class="container-fluid">
-          <div class="mt-4">
-            <p>日期: <span id="period">2022 05/14 5/15 </span></p>
-            <ul>
-              <li style="font-size: 14px" id="overview">今年，竹山最有特色的車站【台西車站】將舉辦好感市集， 集結有理念地方故事，一起於台西車站一樓大廳，與大家共襄盛舉，歡迎大家一起來認識這些人與那些人為地方用心與努力。
-            </ul>
-          </div>
-          <div class="table-responsive-sm">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col" width="30%" class="text-center">活動名稱</th>
-                  <th scope="col" width="30%" class="text-center">SDGs</th>
-                  <th scope="col" width="20%" class="text-center">時間</th>
-                  <th scope="col" class="text-center"></th>
-                </tr>
-              </thead>
-              <tbody id="task_container">
-              </tbody>
-            </table>
-          </div>
-      </div>
+            <div class="dropdown-menu dropdown-menu-right" id="dropdown"></div>
+          </nav>
+          <div id="activity" class="container-fluid"></div>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
