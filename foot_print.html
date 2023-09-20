@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
-      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <link href="static/css/style.css" rel="stylesheet" type="text/css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/chart.js@4.3.0/dist/chart.umd.js"></script>
+    <script src="https://unpkg.com/chart.js-plugin-labels-dv@4.0.0/dist/chartjs-plugin-labels.min.js"></script>
+    <link href="static/css/style.css" rel="stylesheet" type="text/css" />
     <script src="static/js/config.js"></script>
     <script src="static/js/localStorage.js"></script>
     <script src="static/js/auth.js"></script>
@@ -21,12 +33,12 @@
     <script src="static/js/foot_print.js"></script>
     <script src="static/js/set-page-info.js"></script>
     <script src="static/js/init.js"></script>
-    <script src="https://d3js.org/d3.v6.js"></script>  
+    <script src="https://d3js.org/d3.v6.js"></script>
     <script src="static/js/plan.js"></script>
     <script type="module" src="static/js/app.js"></script>
-    
+
     <script type="module">
-      import { draws, addWeight } from './static/js/app.js'
+      import { draws, addWeight } from "./static/js/app.js";
 
       // Get user tasks
       var str_list_task_UUIDs = getLocalStorage("list_tasks");
@@ -37,12 +49,15 @@
 
         try {
           list_task_UUIDs = resultJSON.uuid;
-        } catch(e) { console.log(e); }
-
+        } catch (e) {
+          console.log(e);
+        }
       } else {
         try {
           list_task_UUIDs = str_list_task_UUIDs.split(",");
-        } catch(e) { console.log(e); }
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       if (list_task_UUIDs.length != 0) {
@@ -50,24 +65,26 @@
         var list_uuid_project = [];
 
         for (var index = 0; index < list_task_UUIDs.length; index++) {
-
           // Check duplicate project
           var obj_task = get_task_description(list_task_UUIDs[index]);
           var uuid_project = null;
           try {
             uuid_project = obj_task.thumbnail.split("/")[3];
-          } catch(e) {
+          } catch (e) {
             console.log(e);
           }
 
-          if (uuid_project != null && list_uuid_project.includes(uuid_project)) {
+          if (
+            uuid_project != null &&
+            list_uuid_project.includes(uuid_project)
+          ) {
             continue;
           } else {
             list_uuid_project.push(uuid_project);
           }
 
           var weight = getProjectWeight(list_task_UUIDs[index]);
-          totalProjectWeight = addWeight(totalProjectWeight, weight)
+          totalProjectWeight = addWeight(totalProjectWeight, weight);
         }
 
         draws(totalProjectWeight);
@@ -78,44 +95,62 @@
       checkAuth();
       navbar();
     </script>
-
   </head>
 
   <body onload="init();">
-    <div class="container-fluid border border-warning border-width-lg min-vh-100">
+    <div
+      class="container-fluid border border-warning border-width-lg min-vh-100"
+    >
       <div class="row">
         <div class="col">
-          <nav class="navbar navbar-expand-sm navbar-light bg-white align-items-center px-0">
+          <nav
+            class="navbar navbar-expand-sm navbar-light bg-white align-items-center px-0"
+          >
             <a class="navbar-brand mr-3" href="/index.html">
-              <img class="logo-md" src="static/imgs/eID-logo.png">
+              <img class="logo-md" src="static/imgs/eID-logo.png" />
             </a>
-            <a class="navbar-brand mr-0 ml-auto d-sm-none" href="/backend/edit-info.html">
-              <img style="width: 45px"src="static/imgs/user-edit-solid.svg">
+            <a
+              class="navbar-brand mr-0 ml-auto d-sm-none"
+              href="/backend/edit-info.html"
+            >
+              <img style="width: 45px" src="static/imgs/user-edit-solid.svg" />
             </a>
-              <ul class="nav nav-tabs w-100 mr-sm-3 mt-3 mt-sm-0">
-                <li class="nav-item">
-                  <a class="nav-link px-2 px-sm-3" href="/eid.html">身分證</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link px-2 px-sm-3" href="/issues.html">永續合作</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active px-2 px-sm-3" href="/foot_print.html">數位足跡</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link px-2 px-sm-3" href="/wallet.html">領取任務</a>
-                </li>
-              </ul>
-              <a class="navbar-brand mr-0 ml-auto d-none d-sm-block" href="/backend/edit-info.html">
-                <img style="width: 45px"src="static/imgs/user-edit-solid.svg">
-              </a>
-              <div class="dropdown-menu dropdown-menu-right" id="dropdown">
-              </div>
+            <ul class="nav nav-tabs w-100 mr-sm-3 mt-3 mt-sm-0">
+              <li class="nav-item">
+                <a class="nav-link px-2 px-sm-3" href="/eid.html">關於</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-2 px-sm-3" href="/issues.html"
+                  >永續合作</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active px-2 px-sm-3" href="/foot_print.html"
+                  >數位足跡</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-2 px-sm-3" href="/wallet.html"
+                  >領取任務</a
+                >
+              </li>
+            </ul>
+            <a
+              class="navbar-brand mr-0 ml-auto d-none d-sm-block"
+              href="/backend/edit-info.html"
+            >
+              <img style="width: 45px" src="static/imgs/user-edit-solid.svg" />
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" id="dropdown"></div>
           </nav>
-          <div class="container-fluid min-vh-100"> <!--border border-warning border-width-lg-->
+          <div class="container-fluid min-vh-100">
+            <!--border border-warning border-width-lg-->
             <div class="row justify-content-center mt-4">
-              <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
-                <div class="border p-2" style="height: 300px; overflow-y: scroll;">
+              <div class="col-md-5 col-12 mb-5">
+                <div
+                  class="border p-2"
+                  style="height: 300px; overflow-y: scroll"
+                >
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -125,152 +160,344 @@
                       </tr>
                     </thead>
                     <tbody>
-      <tr>
-              <td><img src="static/imgs/SDGS/E_WEB_01.png" width="40px" height="40px"/>
-                <td id="person_s1">0
-                <td id="project_s1">0
-              </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_02.png" width="40px" height="40px"/></td>
-		          <td id="person_s2">0
-		          <td id="project_s2">0
-		        </td>
-		        </tr>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_03.png" width="40px" height="40px"/></td>
-		          <td id="person_s3">0
-		          <td id="project_s3">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_04.png" width="40px" height="40px"/></td>
-		          <td id="person_s4">0
-		          <td id="project_s4">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_05.png" width="40px" height="40px"/></td>
-		          <td id="person_s5">0
-		          <td id="project_s5">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_06.png" width="40px" height="40px"/></td>
-		          <td id="person_s6">0
-		          <td id="project_s6">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_07.png" width="40px" height="40px"/></td>
-		          <td id="person_s7">0
-		          <td id="project_s7">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_08.png" width="40px" height="40px"/></td>
-		          <td id="person_s8">0
-		          <td id="project_s8">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_09.png" width="40px" height="40px"/></td>
-		          <td id="person_s9">0
-		          <td id="project_s9">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_10.png" width="40px" height="40px"/></td>
-		          <td id="person_s10">0
-		          <td id="project_s10">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_11.png" width="40px" height="40px"/></td>
-		          <td id="person_s11">0
-		          <td id="project_s11">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_12.png" width="40px" height="40px"/></td>
-		          <td id="person_s12">0
-		          <td id="project_s12">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_13.png" width="40px" height="40px"/></td>
-		          <td id="person_s13">0
-		          <td id="project_s13">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_14.png" width="40px" height="40px"/></td>
-		          <td id="person_s14">0
-		          <td id="project_s14">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_15.png" width="40px" height="40px"/></td>
-		          <td id="person_s15">0
-		          <td id="project_s15">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_16.png" width="40px" height="40px"/></td>
-		          <td id="person_s16">0
-		          <td id="project_s16">0
-		        </td>
-			<tr>
-		          <td><img src="static/imgs/SDGS/E_WEB_17.png" width="40px" height="40px"/></td>
-		          <td id="person_s17">0
-		          <td id="project_s17">0
-		        </td>
-      <tr>
-              <td><img src="static/imgs/SDGS/E_WEB_18.png" width="40px" height="40px"/></td>
-		          <td id="person_s18">0
-		          <td id="project_s18">0
-		        </td>
-      <tr>
-              <td><img src="static/imgs/SDGS/E_WEB_19.png" width="40px" height="40px"/></td>
-		          <td id="person_s19">0
-		          <td id="project_s19">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_20.png" width="40px" height="40px"/></td>
-		          <td id="person_s20">0
-		          <td id="project_s20">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_21.png" width="40px" height="40px"/></td>
-		          <td id="person_s21">0
-		          <td id="project_s21">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_22.png" width="40px" height="40px"/></td>
-		          <td id="person_s22">0
-		          <td id="project_s22">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_23.png" width="40px" height="40px"/></td>
-		          <td id="person_s23">0
-		          <td id="project_s23">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_24.png" width="40px" height="40px"/></td>
-		          <td id="person_s24">0
-		          <td id="project_s24">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_25.png" width="40px" height="40px"/></td>
-		          <td id="person_s25">0
-		          <td id="project_s25">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_26.png" width="40px" height="40px"/></td>
-		          <td id="person_s26">0
-		          <td id="project_s26">0
-		        </td>
-<tr>
-              <td><img src="static/imgs/SDGS/E_WEB_27.png" width="40px" height="40px"/></td>
-		          <td id="person_s27">0
-		          <td id="project_s27">0
-		        </td>
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_01.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s1">0</td>
+                        <td id="project_s1">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_02.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s2">0</td>
+                        <td id="project_s2">0</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_03.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s3">0</td>
+                        <td id="project_s3">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_04.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s4">0</td>
+                        <td id="project_s4">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_05.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s5">0</td>
+                        <td id="project_s5">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_06.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s6">0</td>
+                        <td id="project_s6">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_07.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s7">0</td>
+                        <td id="project_s7">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_08.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s8">0</td>
+                        <td id="project_s8">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_09.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s9">0</td>
+                        <td id="project_s9">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_10.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s10">0</td>
+                        <td id="project_s10">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_11.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s11">0</td>
+                        <td id="project_s11">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_12.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s12">0</td>
+                        <td id="project_s12">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_13.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s13">0</td>
+                        <td id="project_s13">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_14.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s14">0</td>
+                        <td id="project_s14">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_15.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s15">0</td>
+                        <td id="project_s15">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_16.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s16">0</td>
+                        <td id="project_s16">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_17.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s17">0</td>
+                        <td id="project_s17">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_18.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s18">0</td>
+                        <td id="project_s18">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_19.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s19">0</td>
+                        <td id="project_s19">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_20.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s20">0</td>
+                        <td id="project_s20">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_21.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s21">0</td>
+                        <td id="project_s21">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_22.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s22">0</td>
+                        <td id="project_s22">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_23.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s23">0</td>
+                        <td id="project_s23">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_24.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s24">0</td>
+                        <td id="project_s24">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_25.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s25">0</td>
+                        <td id="project_s25">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_26.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s26">0</td>
+                        <td id="project_s26">0</td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                          <img
+                            src="static/imgs/SDGS/E_WEB_27.png"
+                            width="40px"
+                            height="40px"
+                          />
+                        </td>
+                        <td id="person_s27">0</td>
+                        <td id="project_s27">0</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
-                <p class="mt-2 mb-0" style="font-size: 12px">個人 : 個人參與永續合作貢獻的權重。</p>
-                <p class="mb-0" style="font-size: 12px">專案 : 全體參與者於永續合作中累積的權重。</p>
+                <p class="mt-2 mb-0" style="font-size: 12px">
+                  個人 : 個人參與永續合作貢獻的權重。
+                </p>
+                <p class="mb-0" style="font-size: 12px">
+                  專案 : 全體參與者於永續合作中累積的權重。
+                </p>
               </div>
               <!-- <div class="col-6"> -->
-                <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
+              <div class="col-md-7 col-12">
                 <div class="text-start w-100">
-                  <div id="observablehq-chart-b9eea16e1"></div>
+                  <div class="chart-container">
+                    <canvas id="observablehq-chart-b9eea16e1"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
