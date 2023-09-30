@@ -34,6 +34,7 @@
     <script src="/static/js/init.js"></script>
     <script type="module">
       import { renderHandlebars } from "/static/js/utils/handlebars.js";
+      import { get_sdgs_indexes } from "/static/js/utils/sdgs.js";
       $(document).ready(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -51,13 +52,7 @@
             period = obj_parent_task.period;
           }
 
-          const sdgs = Object.entries(child_task.weight)
-            .map(([key, value], index) => [
-              String(index + 1).padStart(2, "0"),
-              value,
-            ])
-            .filter(([key, value]) => parseInt(value) > 0)
-            .map(([key, value], index) => key);
+          const sdgs = get_sdgs_indexes(child_task);
 
           return { ...child_task, sdgs, period, href };
         });
@@ -100,7 +95,7 @@
                     {{/each}}
                   </p>
 
-                  <a href="#" class="btn btn-primary">參與任務</a>
+                  <a href="#" onclick="{{child_task.href}}" class="btn btn-primary">參與任務</a>
                 </div>
               </div>
             </div>
